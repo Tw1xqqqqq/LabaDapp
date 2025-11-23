@@ -31,7 +31,6 @@ export default function ERC20Component() {
       return;
     }
 
-    // Validate address format
     if (!/^0x[a-fA-F0-9]{40}$/.test(contractAddress.trim())) {
       alert("Invalid contract address format. Please enter a valid Ethereum address (0x...).");
       return;
@@ -41,7 +40,6 @@ export default function ERC20Component() {
     try {
       const checkedAddress = contractAddress.trim() as Address;
       
-      // Check if address is a contract
       const bytecode = await publicClient.getBytecode({ address: checkedAddress });
       if (!bytecode || bytecode === "0x") {
         alert("The address provided is not a contract. Please enter a valid contract address.");
@@ -54,7 +52,6 @@ export default function ERC20Component() {
         client: publicClient,
       });
 
-      // Try to read contract functions individually with better error handling
       let name: string | null = null;
       let symbol: string | null = null;
       let decimals: number | null = null;
@@ -79,7 +76,6 @@ export default function ERC20Component() {
         decimals = Number(decimalsValue);
       } catch (error: any) {
         console.error("Error reading decimals:", error);
-        // Some old ERC20 tokens don't have decimals, default to 18
         decimals = 18;
       }
 
@@ -93,7 +89,6 @@ export default function ERC20Component() {
       let balance = null;
       let balanceAddress = walletAddress;
       
-      // If no wallet address specified, try to get connected wallet address
       if (!balanceAddress) {
         try {
           const [address] = await walletClient.getAddresses();
@@ -171,7 +166,6 @@ export default function ERC20Component() {
 
       alert(`Transfer successful! Transaction Hash: ${hash}`);
       
-      // Refresh balance after a delay
       setTimeout(() => getTokenInfo(), 3000);
     } catch (error: any) {
       alert(`Transfer failed: ${error.message || error}`);
